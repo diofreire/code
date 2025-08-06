@@ -1,6 +1,6 @@
 <?php
 
-namespace libraries\RestServer;
+namespace Restserver\Libraries;
 
 use Exception;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace libraries\RestServer;
+namespace Restserver\Libraries;
 
 use Exception;
 use RecursiveArrayIterator;
@@ -17,7 +17,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  *
  * @version         4.0.0
  */
-class RestController extends \CI_Controller
+class RESTController extends \CI_Controller
 {
     /**
      * This defines the rest format
@@ -415,7 +415,7 @@ class RestController extends \CI_Controller
         if ($this->auth_override === false &&
             (!($this->config->item('rest_enable_keys') && $this->_allow === true) ||
                 ($this->config->item('allow_auth_and_keys') === true && $this->_allow === true))) {
-            $rest_auth = strtolower($this->config->item('rest_auth'));
+            $rest_auth = strtolower($this->config->item('rest_auth') ?? '');
             switch ($rest_auth) {
                 case 'basic':
                     $this->_prepare_basic_auth();
