@@ -55,3 +55,9 @@ $route['translate_uri_dashes'] = FALSE;
 
 // Login
 $route['auth/login']['post'] = 'auth/login';
+
+// Usuario
+$route['usuario/users']['get'] = 'usuario/users';
+$route['usuario/users']['post'] = 'usuario/users';
+$route['usuario/users/(:num)']['put'] = 'usuario/users/$1';
+$route['usuario/users/(:num)']['delete'] = 'usuario/users/$1';

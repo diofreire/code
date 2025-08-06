@@ -1,20 +1,21 @@
 <?php
-require APPPATH . '/libraries/REST_Controller.php';
-require APPPATH . '/libraries/Format.php';
+require APPPATH . 'libraries/REST_Controller.php';;
+require APPPATH . 'libraries/Format.php';
 
-use libraries\RestServer\RestController;
+use Restserver\Libraries\RESTController;
 
-class Auth extends REST_Controller
+class Auth extends RESTController
 {
     public function __construct()
     {
         parent::__construct();
+        $this->load->database();
         $this->load->model('User_model');
         $this->load->helper(['security', 'jwt']);
     }
 
     // POST /auth/login
-    public function login()
+    public function login_post()
     {
         $email = $this->security->xss_clean($this->post('email'));
         $senha = $this->security->xss_clean($this->post('senha'));
@@ -25,7 +26,7 @@ class Auth extends REST_Controller
                     'status' => false,
                     'message' => 'Email e senha são obrigatórios'
                 ],
-                REST_Controller::HTTP_BAD_REQUEST
+                RESTController::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -34,12 +35,13 @@ class Auth extends REST_Controller
 
         if ($user && password_verify($senha, $user['senha'])) {
             $token = create_jwt(['id' => $user['id'], 'email' => $user['email']]);
+
             $this->response(
                 [
                     'status' => true,
                     'token' => $token
                 ],
-                REST_Controller::HTTP_OK
+                RESTController::HTTP_OK
             );
         } else {
             $this->response(
@@ -47,7 +49,7 @@ class Auth extends REST_Controller
                     'status' => false,
                     'message' => 'Credenciais inválidas'
                 ],
-                REST_Controller::HTTP_UNAUTHORIZED
+                RESTController::HTTP_UNAUTHORIZED
             );
         }
     }
