@@ -80,12 +80,12 @@ INSERT INTO `users` (`id`, `nome`, `email`, `senha`, `criado_em`, `admin`) VALUE
 
 ## 🧪 Endpoints da API
 
-| Método | Rota        | Descrição               |
-|--------|-------------|-------------------------|
-| GET    | /users      | Lista todos os usuários |
-| POST   | /users      | Cria um novo usuário    |
-| PUT    | /users/{id} | Atualiza um usuário     |
-| DELETE | /users/{id} | Deleta um usuário       |
+| Método | Rota             | Descrição                  |
+|--------|------------------|----------------------------|
+| GET    | /users           | Lista todos os usuários    |
+| POST   | /users           | Cria um novo usuário       |
+| PUT    | /users/{id}      | Atualiza um usuário        |
+| DELETE | /users/{id}      | Deleta um usuário          |
 
 > 🔐 Todos os endpoints exigem autenticação com JWT (exceto login).
 
@@ -139,3 +139,16 @@ Formato de erro:
 
 ---
 
+## 🤝 Contribuindo
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir uma _issue_ ou enviar um _pull request_ com melhorias ou correções.
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais informações.
+
+---
+
+Feito com 💙 usando PHP e CodeIgniter 3.
