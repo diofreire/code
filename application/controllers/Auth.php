@@ -9,50 +9,26 @@ class Auth extends RESTController
     public function __construct()
     {
         parent::__construct();
-        $this->load->database();
-        $this->load->model('User_model');
-        $this->load->helper(['security', 'jwt']);
+        $this->load->helper(['login', 'jwt']);
     }
 
     // POST /auth/login
     public function login_post()
     {
-        $email = $this->security->xss_clean($this->post('email'));
-        $senha = $this->security->xss_clean($this->post('senha'));
+        $email = $this->post('email');
+        $senha = $this->post('senha');
 
-        if (!$email || !$senha) {
+        $result = process_login($email, $senha);
+
+        if ($result['status']) {
             $this->response(
-                [
-                    'status' => false,
-                    'message' => 'Email e senha são obrigatórios'
-                ],
-                RESTController::HTTP_BAD_REQUEST
-            );
-            return;
-        }
-
-        $user = $this->User_model->get_by_email($email);
-
-        if ($user && password_verify($senha, $user['senha'])) {
-            $token = create_jwt([
-                'id' => $user['id'],
-                'email' => $user['email']
-            ]);
-
-            $this->response(
-                [
-                    'status' => true,
-                    'token' => $token
-                ],
-                RESTController::HTTP_OK
+                ['status' => true, 'token' => $result['token']],
+                $result['http_code']
             );
         } else {
             $this->response(
-                [
-                    'status' => false,
-                    'message' => 'Credenciais inválidas'
-                ],
-                RESTController::HTTP_UNAUTHORIZED
+                ['status' => false, 'message' => $result['message']],
+                $result['http_code']
             );
         }
     }
