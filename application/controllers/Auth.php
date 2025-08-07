@@ -9,7 +9,7 @@ class Auth extends RESTController
     public function __construct()
     {
         parent::__construct();
-        $this->load->helper(['login', 'jwt']);
+        $this->load->helper(['auth', 'jwt']);
     }
 
     // POST /auth/login
