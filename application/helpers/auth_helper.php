@@ -50,6 +50,7 @@ function process_login($email, $senha) {
  * @return mixed|null
  */
 function get_logged_user() {
+    $CI =& get_instance();
     $token = get_bearer_token();
 
     if (!$token) {
@@ -63,7 +64,7 @@ function get_logged_user() {
     $decoded = decode_jwt_token($token);
 
     if (!$decoded) {
-        $this->response([
+        $CI->response([
             'status' => false,
             'message' => 'Token inválido ou expirado'
         ], RESTController::HTTP_UNAUTHORIZED);
@@ -75,23 +76,23 @@ function get_logged_user() {
     $email = $decoded->email ?? null;
 
     if (!$user_id && !$email) {
-        $this->response([
+        $CI->response([
             'status' => false,
             'message' => 'Token sem dados de usuário'
         ], RESTController::HTTP_UNAUTHORIZED);
         return null;
     }
 
-    $this->load->model('User_model');
+    $CI->load->model('User_model');
 
     if ($user_id) {
-        $user = $this->User_model->get_by_id($user_id);
+        $user = $CI->User_model->get_by_id($user_id);
     } else {
-        $user = $this->User_model->get_by_email($email);
+        $user = $CI->User_model->get_by_email($email);
     }
 
     if (!$user) {
-        $this->response([
+        $CI->response([
             'status' => false,
             'message' => 'Usuário não encontrado'
         ], RESTController::HTTP_UNAUTHORIZED);

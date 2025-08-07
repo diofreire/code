@@ -2,6 +2,8 @@
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+
+
 function create_jwt($data)
 {
     $CI =& get_instance();
@@ -58,5 +60,17 @@ function verify_jwt_token() {
         return $decoded; // objeto com os dados do payload
     } catch (Exception $e) {
         return null; // token inválido ou expirado
+    }
+}
+
+function decode_jwt_token($token) {
+    $CI =& get_instance();
+    $CI->load->config('jwt'); // garante que o config está carregado
+    $key = $CI->config->item('jwt_key');
+
+    try {
+        return (JWT::decode($token, new Key($key, 'HS256')))->data;
+    } catch (Exception $e) {
+        return null;
     }
 }

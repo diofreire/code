@@ -11,20 +11,28 @@ class Usuario extends RESTController
         parent::__construct();
         $this->load->database();
         $this->load->model('User_model');
-        $this->load->helper(['security', 'jwt']);
+        $this->load->helper(['security', 'jwt', 'auth']);
     }
 
     // CRUD protegido
-    public function users_get()
-    {
+    public function users_get() {
         $this->verify_request();
-        $users = $this->User_model->get_all();
-        $this->response($users, RESTController::HTTP_OK);
+        // Verifica se admin
+        $result = get_logged_user();
+        if($result['admin'] == '1') {
+            $users = $this->User_model->get_all();
+            $this->response($users, RESTController::HTTP_OK);
+        } else {
+            $this->response(
+                ['status' => false, 'message' => 'Usuário não autorizado'],
+                RESTController::HTTP_UNAUTHORIZED
+            );
+        }
     }
 
-    public function users_post()
-    {
-        //$this->verify_request();
+    public function users_post() {
+        // Verifica se está logado
+        $this->verify_request();
 
         $nome = $this->security->xss_clean($this->post('nome'));
         $email = $this->security->xss_clean($this->post('email'));
@@ -64,9 +72,18 @@ class Usuario extends RESTController
         }
     }
 
-    public function users_put($id)
-    {
+    public function users_put($id) {
         $this->verify_request();
+
+        // Verifica se o ID informado é do usuário
+        // Caso não seja, verifica se é admin e permite a alteração;
+        $result = get_logged_user();
+        if($result['id'] != $id && $result['admin'] != '1') {
+            $this->response(
+                ['status' => false, 'message' => 'Ação não autorizada'],
+                RESTController::HTTP_UNAUTHORIZED
+            );
+        }
 
         $nome = $this->security->xss_clean($this->put('nome'));
         $email = $this->security->xss_clean($this->put('email'));
@@ -97,9 +114,16 @@ class Usuario extends RESTController
         }
     }
 
-    public function users_delete($id)
-    {
+    public function users_delete($id) {
         $this->verify_request();
+        // Verifica se admin
+        $result = get_logged_user();
+        if($result['admin'] != '1') {
+            $this->response(
+                ['status' => false, 'message' => 'Usuário não autorizado'],
+                RESTController::HTTP_UNAUTHORIZED
+            );
+        }
 
         if ($this->User_model->delete_user($id)) {
             $this->response(
@@ -114,8 +138,7 @@ class Usuario extends RESTController
         }
     }
 
-    private function verify_request()
-    {
+    private function verify_request() {
         $authHeader = $this->input->get_request_header('Authorization');
         if (!$authHeader || strpos($authHeader, 'Bearer ') !== 0) {
             $this->response(
