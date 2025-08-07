@@ -34,7 +34,10 @@ class Auth extends RESTController
         $user = $this->User_model->get_by_email($email);
 
         if ($user && password_verify($senha, $user['senha'])) {
-            $token = create_jwt(['id' => $user['id'], 'email' => $user['email']]);
+            $token = create_jwt([
+                'id' => $user['id'],
+                'email' => $user['email']
+            ]);
 
             $this->response(
                 [
