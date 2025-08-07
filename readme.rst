@@ -80,12 +80,12 @@ INSERT INTO `users` (`id`, `nome`, `email`, `senha`, `criado_em`, `admin`) VALUE
 
 ## 🧪 Endpoints da API
 
-| Método | Rota             | Descrição                  |
-|--------|------------------|----------------------------|
-| GET    | /users           | Lista todos os usuários    |
-| POST   | /users           | Cria um novo usuário       |
-| PUT    | /users/{id}      | Atualiza um usuário        |
-| DELETE | /users/{id}      | Deleta um usuário          |
+| Método | Rota        | Descrição               |
+|--------|-------------|-------------------------|
+| GET    | /users      | Lista todos os usuários |
+| POST   | /users      | Cria um novo usuário    |
+| PUT    | /users/{id} | Atualiza um usuário     |
+| DELETE | /users/{id} | Deleta um usuário       |
 
 > 🔐 Todos os endpoints exigem autenticação com JWT (exceto login).
 
@@ -136,4 +136,6 @@ Formato de erro:
   "message": "Mensagem de erro descritiva"
 }
 ```
+
+---
 
